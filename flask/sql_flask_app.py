@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from marshmallow import Schema, fields, ValidationError
+from sqlalchemy.orm import joinedload
 
 # Flask Application Setup
 app = Flask(__name__)
@@ -26,6 +27,9 @@ class PostModel(db.Model):
     user_id = Column(Integer, db.ForeignKey('users.user_id'), nullable=False)
     comments = db.relationship('CommentModel', backref='post', lazy=True)
     user = db.relationship('UserModel', backref='posts', lazy=True)
+    likes = db.relationship('LikeModel', backref='post', lazy=True)
+    def __repr__(self):
+        return f"Post('{self.content}')"
 
 class CommentModel(db.Model):
     __tablename__ = "comments"
@@ -40,7 +44,6 @@ class LikeModel(db.Model):
     like_id = Column(Integer, primary_key=True, autoincrement=True)
     post_id = Column(Integer, db.ForeignKey('posts.post_id'), nullable=False)
     user_id = Column(Integer, db.ForeignKey('users.user_id'), nullable=False)
-    post = db.relationship('PostModel', backref='likes', lazy=True)
     user = db.relationship('UserModel', backref='likes', lazy=True)
 
 # Schema for User Data Validation
@@ -60,7 +63,12 @@ class CommentSchema(Schema):
 
 # Schema for Like Data Validation
 class LikeSchema(Schema):
-    pass
+    like_id = fields.Int(dump_only=True)
+    user_id = fields.Int(required=True)
+    post_id = fields.Int(required=True)
+
+class LikeUserSchema(Schema):
+    user = fields.Nested(UserSchema)
 
 # Schema instances
 post_schema = PostSchema()
@@ -74,6 +82,8 @@ likes_schema = LikeSchema(many=True)
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+
+like_user_schema = LikeUserSchema(many=True)
 
 # READ
 @app.route('/users', methods=['GET'])
@@ -129,47 +139,49 @@ def read_root():
 # complex query to get the user and their posts 
 @app.route('/users/posts', methods=['GET'])
 def read_user_posts():
-    query = db.session.query(UserModel, PostModel).join(PostModel)
-    results = query.all()
-    return jsonify([{"username": user.username, "content": post.content} for user, post in results]), 200
+    posts = PostModel.query.options(db.joinedload(PostModel.user)).all()
+    result = []
+    for post in posts:
+        post_data = post_schema.dump(post)
+        post_data['user'] = user_schema.dump(post.user)
+        result.append(post_data)
+    return result, 200
+    
 
 # compelex query to get the user and their comments and the post they commented on
 @app.route('/users/comments', methods=['GET'])
 def read_user_comments():
-    # Join UserModel, CommentModel, and PostModel
-    query = db.session.query(UserModel, CommentModel, PostModel)\
-                      .join(CommentModel, UserModel.user_id == CommentModel.user_id)\
-                      .join(PostModel, PostModel.post_id == CommentModel.post_id)
-    results = query.all()
-    
-    # Format the results
-    comments_data = []
-    for user, comment, post in results:
-        comments_data.append({
-            "username": user.username,
-            "comment": comment.comment_text,
-            "post": post.content
-        })
-
-    return jsonify(comments_data), 200
+    users = UserModel.query.options(db.joinedload(UserModel.comments)).all()
+    result = []
+    for user in users:
+        user_data = user_schema.dump(user)
+        user_data['comments'] = comments_schema.dump(user.comments)
+        result.append(user_data)
+    return result, 200
 
 # complex query to number of likes per posts
 @app.route('/posts/likes', methods=['GET'])
 def read_post_likes():
-    query = db.session.query(PostModel, LikeModel).join(LikeModel)
-    results = query.all()
-    return jsonify([{"content": post.content, "likes": len(post.likes)} for post, like in results]), 200
+    posts = PostModel.query.options(db.joinedload(PostModel.likes)).all()
+    result = []
+    for post in posts:
+        post_data = post_schema.dump(post)
+        post_data['likes'] = likes_schema.dump(post.likes)
+        result.append(post_data)
+    return result, 200
 
 # which users like which post
 @app.route('/posts/likes/users', methods=['GET'])
 def read_post_likes_users():
-    # Explicitly starting from PostModel and defining join paths
-    query = db.session.query(PostModel, LikeModel, UserModel)\
-                      .select_from(PostModel)\
-                      .join(LikeModel, PostModel.post_id == LikeModel.post_id)\
-                      .join(UserModel, LikeModel.user_id == UserModel.user_id)
-    results = query.all()
-    return jsonify([{"content": post.content, "username": user.username} for post, like, user in results]), 200
+    posts = PostModel.query.options(db.joinedload(PostModel.likes).joinedload(LikeModel.user)).all()
+    result = []
+    # use like user schema to include user details
+    for post in posts:
+        post_data = post_schema.dump(post)
+        post_data['likes'] = like_user_schema.dump(post.likes)
+        result.append(post_data)
+
+    return result, 200
 
 
 

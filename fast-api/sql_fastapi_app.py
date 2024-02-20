@@ -159,7 +159,7 @@ def read_user_posts(db: Session = Depends(get_db)):
 
 @app.get("/users/comments")
 def read_user_comments(db: Session = Depends(get_db)):
-    comments = db.query(CommentModel).options(joinedload(CommentModel.user)).all()
+    comments = db.query(UserModel).options(joinedload(UserModel.comments)).all()
     return comments
 
 @app.get("/posts/likes")
