@@ -4,9 +4,11 @@ import random
 uri = "bolt://localhost:7687"
 driver = GraphDatabase.driver(uri, auth=("neo4j", "yourStrongPasswordHere"))
 
+with driver.session() as session:
+    session.run("MATCH (n) DETACH DELETE n")
 def add_dummy_data(tx):
     for i in range(1, 51):
-        tx.run("CREATE (u:User {username: $username, email: $email})", username=f"user{i}", email=f"user{i}@example.com")
+        tx.run("CREATE (u:User {username: $username, email: $email, user_id: $user_id})", username=f"user{i}", email=f"user{i}@example.com", user_id=i)
         tx.run("""
             MATCH (u:User {username: $username})
             CREATE (u)-[:POSTED]->(p:Post {content: $content, timestamp: $timestamp})
@@ -23,4 +25,6 @@ def add_dummy_data(tx):
 with driver.session() as session:
     session.execute_write(add_dummy_data)
 
+
 driver.close()
+
