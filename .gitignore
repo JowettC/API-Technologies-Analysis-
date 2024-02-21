@@ -1,8 +1,8 @@
-.venv/
 __pycache__/
-venv/
 node_modules/
 *.pyc
+# any folder that ends with env
+*env/
 
 ```
 
