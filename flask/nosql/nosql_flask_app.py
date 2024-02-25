@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/socialmedia"
+app.config["MONGO_URI"] = "mongodb://mongo:27017/socialmedia"
 mongo = PyMongo(app)
 
 @app.route('/')
@@ -142,4 +142,4 @@ def read_post_likes_users():
     return jsonify(result), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8011, host='0.0.0.0')
+    app.run(port=8011, host='0.0.0.0')

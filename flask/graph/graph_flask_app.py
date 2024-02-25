@@ -4,7 +4,7 @@ from datetime import datetime
 import random
 
 app = Flask(__name__)
-uri = "bolt://localhost:7687"
+uri = "bolt://neo4j:7687"
 driver = GraphDatabase.driver(uri, auth=("neo4j", "yourStrongPasswordHere"))
 
 def get_session():
@@ -130,4 +130,4 @@ def read_post_likes_users():
         return jsonify(final_result)
 
 if __name__ == "__main__":
-    app.run(port=8021)
+    app.run(port=8021, host='0.0.0.0')

@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 app = Flask(__name__)
 
 # Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:example@localhost/socialmedia"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:example@mysql/socialmedia"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -187,4 +187,4 @@ def read_post_likes_users():
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(debug=True, port=8001, host='0.0.0.0')
+    app.run(port=8001, host='0.0.0.0')

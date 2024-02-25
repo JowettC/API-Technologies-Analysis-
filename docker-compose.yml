@@ -49,4 +49,51 @@ services:
       - mysql
       - mongo
       - neo4j
-  
+  flask_sql:
+    image: jowettc/sql_flask:latest
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  flask_nosql:
+    image: jowettc/nosql_flask:latest
+    ports:
+      - "8011:8011"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  flask_graph:
+    image: jowettc/graph_flask:latest
+    ports:
+      - "8021:8021"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  express_sql:
+    image: jowettc/sql_express:latest
+    ports:
+      - "8002:8002"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  express_nosql:
+    image: jowettc/nosql_express:latest
+    ports:
+      - "8012:8012"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  express_graph:
+    image: jowettc/graph_express:latest
+    ports:
+      - "8022:8022"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j

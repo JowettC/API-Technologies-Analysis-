@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Set up Sequelize connection
 const sequelize = new Sequelize("socialmedia", "root", "example", {
-  host: "localhost",
+  host: "mysql",
   dialect: "mysql",
 });
 

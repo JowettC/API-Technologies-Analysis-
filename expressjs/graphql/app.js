@@ -5,7 +5,7 @@ const neo4j = require('neo4j-driver');
 const app = express();
 app.use(bodyParser.json());
 
-const driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('neo4j', 'yourStrongPasswordHere'));
+const driver = neo4j.driver('bolt://neo4j:7687', neo4j.auth.basic('neo4j', 'yourStrongPasswordHere'));
 const session = driver.session();
 
 app.get('/', (req, res) => {

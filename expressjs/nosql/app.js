@@ -2,7 +2,7 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 
 const app = express();
-const client = new MongoClient('mongodb://localhost:27017/');
+const client = new MongoClient('mongodb://mongo:27017/');
 const db = client.db('socialmedia');
 const usersCollection = db.collection('users');
 
