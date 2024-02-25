@@ -24,3 +24,29 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+
+  fastapi_sql:
+    image: jowettc/sql_fast_api:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  fastapi_nosql:
+    image: jowettc/nosql_fast_api:latest
+    ports:
+      - "8010:8010"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  fastapi_graph:
+    image: jowettc/graph_fast_api:latest
+    ports:
+      - "8020:8020"
+    depends_on:
+      - mysql
+      - mongo
+      - neo4j
+  

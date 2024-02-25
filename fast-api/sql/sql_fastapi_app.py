@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, Session, relationship, joinedload
 from pydantic import BaseModel
 
 # Database Configuration
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:example@localhost/socialmedia"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:example@mysql/socialmedia"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
