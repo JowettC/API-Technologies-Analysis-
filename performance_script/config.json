@@ -1,0 +1,23 @@
+{
+    "ports": ["8000", "8001", "8002", "8010", "8011", "8012", "8020", "8021", "8022"],
+    "url": "http://localhost:",
+    "labels": [
+      "FastAPI with SQL",
+      "FastAPI with NoSQL",
+      "FastAPI with Graph",
+      "Flask with SQL",
+      "Flask with NoSQL",
+      "Flask with Graph",
+      "Express with SQL",
+      "Express with NoSQL",
+      "Express with Graph"
+    ],
+    "endpoints": [
+      "/users",
+      "/users/posts",
+      "/users/comments",
+      "/posts/likes",
+      "/posts/likes/users"
+    ]
+  }
+  
