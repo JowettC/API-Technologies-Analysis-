@@ -66,3 +66,24 @@ def measure_delete_latency(url, port, start_num, num_requests=5):
 
     average_latency = total_time / num_requests
     return average_latency
+
+def reset_database(url, port):
+    response = requests.delete(f"{url}{port}/users/reset")
+    if response.status_code == 200:
+        print(f"Database reset on port {port}")
+    else:
+        print(f"Failed to reset database on port {port}")
+
+def measure_complex_get_latency(url, port, endpoint, num_requests=50):
+    total_tiome=0
+    for i in range(num_requests):
+        start_time = time.time()
+        response = requests.get(f"{url}{port}{endpoint}")
+        end_time = time.time()
+        if response.status_code in [200, 201, 204]:
+            total_tiome += (end_time - start_time)
+        else:
+            print(f"Failed request on port {port, endpoint, response.status_code, response.text}")
+    average_latency = total_tiome / num_requests
+    return average_latency
+

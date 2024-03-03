@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/users', async (req, res) => {
+    let session = driver.session();
     const result = await session.run('MATCH (u:User) RETURN u.username AS username, u.email AS email, u.user_id AS user_id');
     res.json(result.records.map(record => record.toObject()));
 });
@@ -134,5 +135,5 @@ app.get('/posts/likes/users', async (req, res) => {
 });
 
 app.listen(8022, () => {
-    console.log('Server running on port 8021');
+    console.log('Server running on port 8022');
 });

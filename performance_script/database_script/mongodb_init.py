@@ -8,12 +8,12 @@ db = client["socialmedia"]
 users = db["users"]
 
 # erase all data
-def insertDataIntoMongoDB():
+def insert_data_into_mongodb(data=50):
     print("=== Starting Script to insert data into MongoDB ===")
     users.delete_many({})
     print("Data erased before inserting new data")
     # Insert dummy data
-    for i in range(1, 51):
+    for i in range(1, data+1):
         user = {
             "user_id": i,
             "username": f"user{i}",

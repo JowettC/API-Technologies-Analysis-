@@ -13,7 +13,6 @@
       "Express with Graph"
     ],
     "endpoints": [
-      "/users",
       "/users/posts",
       "/users/comments",
       "/posts/likes",

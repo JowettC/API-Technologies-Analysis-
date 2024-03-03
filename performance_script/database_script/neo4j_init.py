@@ -4,13 +4,13 @@ import random
 uri = "bolt://localhost:7687"
 driver = GraphDatabase.driver(uri, auth=("neo4j", "yourStrongPasswordHere"))
 
-def insertDataIntoNeo4j():
+def insert_data_into_neo4j(data=50):
     print("=== Starting Script to insert data into Neo4j ===")
     with driver.session() as session:
         session.run("MATCH (n) DETACH DELETE n")
         print("Data erased before inserting new data")
     def add_dummy_data(tx):
-        for i in range(1, 51):
+        for i in range(1, data+1):
             tx.run("CREATE (u:User {username: $username, email: $email, user_id: $user_id})", username=f"user{i}", email=f"user{i}@example.com", user_id=i)
             tx.run("""
                 MATCH (u:User {username: $username})
