@@ -8,3 +8,7 @@ This project is about analyzing the technologies used in the APIs of the top 100
 4. Conclusion
 
 ## Data Collection
+
+
+## grafana 
+admin/newpassword
