@@ -4,11 +4,13 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship, joinedload
 from pydantic import BaseModel
+from sqlalchemy.pool import NullPool
 
 # Database Configuration
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:example@mysql/socialmedia"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:example@localhost:3306/socialmedia"
+engine = create_engine(SQLALCHEMY_DATABASE_URL,pool_size=200,max_overflow=300)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 Base = declarative_base()
 
